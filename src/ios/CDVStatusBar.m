@@ -357,7 +357,9 @@ static const void *kStatusBarStyle = &kStatusBarStyle;
     if (!app.isStatusBarHidden)
     {
         self.viewController.wantsFullScreenLayout = YES;
-        CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+        
+        CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;        
+        statusBarFrame = [self invertFrameIfNeeded:statusBarFrame orientation:self.viewController.interfaceOrientation];
 
         [self hideStatusBar];
 
@@ -366,15 +368,10 @@ static const void *kStatusBarStyle = &kStatusBarStyle;
         }
 
         if (!_statusBarOverlaysWebView) {
-
             CGRect frame = self.webView.frame;
             frame.origin.y = 0;
             if (!self.statusBarOverlaysWebView) {
-                if (UIDeviceOrientationIsLandscape(self.viewController.interfaceOrientation)) {
-                    frame.size.height += statusBarFrame.size.width;
-                } else {
-                    frame.size.height += statusBarFrame.size.height;
-                }
+                frame.size.height += statusBarFrame.size.height;
             }
 
             self.webView.frame = frame;
